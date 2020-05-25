@@ -18,7 +18,7 @@ var async = require('async');
 module.exports = function (app) {
 
   mongoose.connect(process.env.DATABASE, { useNewUrlParser: true, useUnifiedTopology: true });
-  const StockSchema = new Schema({ stock: String, likes: Number, addresses: [Number] });
+  const StockSchema = new Schema({ stock: String, likes: Number, addresses: [String] });
   const STOCK = mongoose.model("STOCK", StockSchema);
 
   const urlStart = 'https://repeated-alpaca.glitch.me/v1/stock/';
@@ -51,6 +51,16 @@ module.exports = function (app) {
       }
     });
 
+  app.route('/api/reset/').get(function(req, res) {
+    STOCK.deleteMany({}, function(err, data) {
+      if(err) {
+        console.log(err);
+      } else {
+        res.send("Stock data deleted");
+      }
+    })
+  })
+
   function handleStockRequest(stockData, like, ip, res) {
     let calls = [];
     for(let i = 0; i < stockData.length; i++) {
@@ -63,11 +73,12 @@ module.exports = function (app) {
               data = new STOCK({stock: stockData[i].symbol, likes: 0, addresses: []});
             }
             console.log(ip);
+            console.log(data);
             if(like === "true") {
               if(!data.addresses.includes(ip)){
                 data.likes++;
               }
-              addresses.push(ip);
+              data.addresses.push(ip);
             }
             data.save((err) => {
               if(err) {
