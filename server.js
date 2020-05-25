@@ -14,6 +14,8 @@ require('dotenv').config();
 
 var app = express();
 
+app.set("trust proxy", true);
+
 app.use('/public', express.static(process.cwd() + '/public'));
 
 app.use(cors({origin: '*'})); //For FCC testing purposes only

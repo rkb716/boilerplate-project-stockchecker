@@ -38,7 +38,7 @@ module.exports = function (app) {
         stockData.push({symbol: data.symbol, price: data.latestPrice});
         stocksObtained++;
         if(stocksObtained >= stocksToObtain) {
-          handleStockRequest(stockData, like, res);
+          handleStockRequest(stockData, like, req.ip, res);
         }
       };
       if (Array.isArray(stocks)) {
@@ -51,7 +51,7 @@ module.exports = function (app) {
       }
     });
 
-  function handleStockRequest(stockData, like, res) {
+  function handleStockRequest(stockData, like, ip, res) {
     let calls = [];
     for(let i = 0; i < stockData.length; i++) {
       calls.push(function(callback) {
@@ -62,8 +62,12 @@ module.exports = function (app) {
             if(data == null) {
               data = new STOCK({stock: stockData[i].symbol, likes: 0, addresses: []});
             }
+            console.log(ip);
             if(like === "true") {
-              data.likes++;
+              if(!addresses.includes(ip)){
+                data.likes++;
+              }
+              addresses.push(ip);
             }
             data.save((err) => {
               if(err) {
