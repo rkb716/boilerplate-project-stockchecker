@@ -38,7 +38,7 @@ module.exports = function (app) {
         stockData.push({symbol: data.symbol, price: data.latestPrice});
         stocksObtained++;
         if(stocksObtained >= stocksToObtain) {
-          return res.json(handleStockRequest(stockData, like));
+          handleStockRequest(stockData, like, res);
         }
       };
       if (Array.isArray(stocks)) {
@@ -51,7 +51,7 @@ module.exports = function (app) {
       }
     });
 
-  function handleStockRequest(stockData, like) {
+  function handleStockRequest(stockData, like, res) {
     let calls = [];
     for(let i = 0; i < stockData.length; i++) {
       calls.push(function(callback) {
@@ -85,7 +85,10 @@ module.exports = function (app) {
         console.log(err);
       } else {
         console.log("Async results " + JSON.stringify(result));
-        return result;
+        if(result.length == 1) {
+          result = result[0];
+        }
+        return res.json({"stockData": result});
       }
     })
   }
