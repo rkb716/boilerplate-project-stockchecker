@@ -64,7 +64,7 @@ module.exports = function (app) {
             }
             console.log(ip);
             if(like === "true") {
-              if(!addresses.includes(ip)){
+              if(!data.addresses.includes(ip)){
                 data.likes++;
               }
               addresses.push(ip);
