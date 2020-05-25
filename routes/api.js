@@ -28,7 +28,6 @@ module.exports = function (app) {
   //In stockData, I can see the stock(string, the ticker), price(decimal in string format), and likes(int).
   app.route('/api/stock-prices')
     .get(function (req, res) {
-      console.log("GET called");
       let stocks = req.query.stock;
       let like = req.query.like;
       let stockData = [];
@@ -72,8 +71,6 @@ module.exports = function (app) {
             if(data == null) {
               data = new STOCK({stock: stockData[i].symbol, likes: 0, addresses: []});
             }
-            console.log(ip);
-            console.log(data);
             if(like === "true") {
               if(!data.addresses.includes(ip)){
                 data.likes++;

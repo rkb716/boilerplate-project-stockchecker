@@ -22,7 +22,7 @@ suite('Functional Tests', function() {
         .get('/api/stock-prices')
         .query({stock: 'goog'})
         .end(function(err, res){
-          
+          assert.equal(res.status, 200);
           //complete this one too
           
           done();
@@ -30,19 +30,51 @@ suite('Functional Tests', function() {
       });
       
       test('1 stock with like', function(done) {
-        
+        chai.request(server)
+        .get('/api/stock-prices')
+        .query({stock: 'goog'})
+        .end(function(err, res){
+          assert.equal(res.status, 200);
+          //complete this one too
+          
+          done();
+        });
       });
       
       test('1 stock with like again (ensure likes arent double counted)', function(done) {
-        
+        chai.request(server)
+        .get('/api/stock-prices')
+        .query({stock: 'goog'})
+        .end(function(err, res){
+          assert.equal(res.status, 200);
+          //complete this one too
+          
+          done();
+        });
       });
       
       test('2 stocks', function(done) {
-        
+        chai.request(server)
+        .get('/api/stock-prices')
+        .query({stock: 'goog'})
+        .end(function(err, res){
+          assert.equal(res.status, 200);
+          //complete this one too
+          
+          done();
+        });
       });
       
       test('2 stocks with like', function(done) {
-        
+        chai.request(server)
+        .get('/api/stock-prices')
+        .query({stock: 'goog'})
+        .end(function(err, res){
+          assert.equal(res.status, 200);
+          //complete this one too
+          
+          done();
+        });
       });
       
     });
