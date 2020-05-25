@@ -13,6 +13,8 @@ var server = require('../server');
 
 chai.use(chaiHttp);
 
+let numberOfLikes;
+
 suite('Functional Tests', function() {
     
     suite('GET /api/stock-prices => stockData object', function() {
@@ -23,8 +25,9 @@ suite('Functional Tests', function() {
         .query({stock: 'goog'})
         .end(function(err, res){
           assert.equal(res.status, 200);
-          //complete this one too
-          
+          assert.equal(res.body.stockData.stock, "GOOG");
+          assert.isNumber(res.body.stockData.price);
+          assert.isNumber(res.body.stockData.likes);
           done();
         });
       });
@@ -35,8 +38,10 @@ suite('Functional Tests', function() {
         .query({stock: 'goog'})
         .end(function(err, res){
           assert.equal(res.status, 200);
-          //complete this one too
-          
+          assert.equal(res.body.stockData.stock, "GOOG");
+          assert.isNumber(res.body.stockData.price);
+          assert.isNumber(res.body.stockData.likes);
+          numberOfLikes = res.body.stockData.likes;
           done();
         });
       });
@@ -47,32 +52,36 @@ suite('Functional Tests', function() {
         .query({stock: 'goog'})
         .end(function(err, res){
           assert.equal(res.status, 200);
-          //complete this one too
-          
+          assert.equal(res.body.stockData.stock, "GOOG");
+          assert.isNumber(res.body.stockData.price);
+          assert.isNumber(res.body.stockData.likes);
+          assert.equal(res.body.stockData.likes, numberOfLikes);
           done();
         });
       });
       
       test('2 stocks', function(done) {
         chai.request(server)
-        .get('/api/stock-prices')
-        .query({stock: 'goog'})
+        .get('/api/stock-prices/?stock=goog&stock=aapl')
         .end(function(err, res){
           assert.equal(res.status, 200);
-          //complete this one too
-          
+          assert.equal(res.body.stockData[0].stock, "GOOG");
+          assert.equal(res.body.stockData[1].stock, "AAPL");
+          assert.isNumber(res.body.stockData[0].price);
+          assert.isNumber(res.body.stockData[1].price);
           done();
         });
       });
       
       test('2 stocks with like', function(done) {
         chai.request(server)
-        .get('/api/stock-prices')
-        .query({stock: 'goog'})
+        .get('/api/stock-prices/?stock=voo&stock=msft&like=true')
         .end(function(err, res){
           assert.equal(res.status, 200);
-          //complete this one too
-          
+          assert.equal(res.body.stockData[0].stock, "MSFT");
+          assert.equal(res.body.stockData[1].stock, "VOO");
+          assert.isNumber(res.body.stockData[0].price);
+          assert.isNumber(res.body.stockData[1].price);
           done();
         });
       });
