@@ -61,9 +61,6 @@ module.exports = function (app) {
           } else {
             if(data == null) {
               data = new STOCK({stock: stockData[i].symbol, likes: 0, addresses: []});
-              console.log("Creating new stock: " + data);
-            } else {
-              console.log("Found stock: " + data);
             }
             if(like === "true") {
               data.likes++;
@@ -78,15 +75,19 @@ module.exports = function (app) {
         });
       })
     }
-    console.log("Before parallel");
     async.parallel(calls, function(err, result) {
-      console.log("After parallel");
       if(err) {
         console.log(err);
       } else {
-        console.log("Async results " + JSON.stringify(result));
         if(result.length == 1) {
           result = result[0];
+        } else {
+          let likeA = result[0].likes;
+          let likeB = result[1].likes;
+          delete result[0].likes;
+          result[0].rel_likes = likeA - likeB;
+          delete result[1].likes;
+          result[1].rel_likes = likeB - likeA;
         }
         return res.json({"stockData": result});
       }
